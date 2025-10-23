@@ -4003,6 +4003,8 @@ def pos_place_order(request):
                 'order_code': order_code,
                 'first_name': first_name,
                 'last_name': last_name,
+				'contact_number': latest_cart.contact_number if latest_cart and latest_cart.contact_number else "N/A",
+				'address': latest_cart.address if latest_cart and latest_cart.address else "In-store",
                 'business_name': business_name,
                 'store_address': store_address,
                 'payment_method': payment_method,
