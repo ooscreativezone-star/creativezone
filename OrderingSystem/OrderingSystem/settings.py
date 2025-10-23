@@ -25,6 +25,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "creativezone.onrender.com,creat
 # CSRF Protection for HTTPS
 CSRF_TRUSTED_ORIGINS = [
     'https://creativezone.onrender.com',
+    'https://creativezone.online',
+    'https://www.creativezone.online',
 ]
 
 # Add your local development origins if needed
