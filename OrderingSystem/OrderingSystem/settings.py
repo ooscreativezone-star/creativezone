@@ -20,7 +20,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "insecure-fallback-key")
 
 DEBUG = os.environ.get("DEBUG", "False").lower() in ["true", "1"]
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "creativezone.onrender.com").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "creativezone.onrender.com,creativezone.online,www.creativezone.online").split(",")
 
 # CSRF Protection for HTTPS
 CSRF_TRUSTED_ORIGINS = [
@@ -184,7 +184,7 @@ if IS_RENDER:
     # CRITICAL FOR RENDER
     SECURE_SSL_REDIRECT = False  # Render handles SSL
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    ALLOWED_HOSTS = ['creativezone.onrender.com']
+    ALLOWED_HOSTS = ['creativezone.onrender.com', 'creativezone.online', 'www.creativezone.online']
     DEBUG = False
 else:
     # Local development
