@@ -5121,44 +5121,47 @@ def update_cart(request, cart_id):
 
 def generate_order_code(order_type):
     if order_type == 'delivery':
-        prefix = 'DL'
+        prefix = 'DG'
     elif order_type == 'pickup':
-        prefix = 'PU'
+        prefix = 'PG'
     elif order_type == 'walkin':
-        prefix = 'WI'
+        prefix = 'WG'
     else:
         prefix = 'XX'
 
-    # Get business opening time
-    business = BusinessDetails.objects.first()  # adjust if multiple businesses
-    opening_time = business.opening_time  # stored as time (e.g. 08:00:00)
-
+    # Get current time in local timezone (server's timezone - Philippines)
     now = timezone.localtime()  # current local datetime
-    today_opening = datetime.combine(now.date(), opening_time, tzinfo=now.tzinfo)
-
-    # If before opening today, use yesterday’s opening for reset reference
-    if now < today_opening:
-        reset_reference = today_opening - timezone.timedelta(days=1)
-    else:
-        reset_reference = today_opening
-
-    # Get latest order for this type since reset_reference
+    
+    # Get current month abbreviation (e.g., OCT, NOV, DEC)
+    month_abbr = now.strftime('%b').upper()
+    
+    # Build prefix with month (e.g., DGOCT, PGNOV)
+    full_prefix = f"{prefix}{month_abbr}"
+    
+    # Get first day of current month for reset reference
+    first_day_of_month = datetime.combine(
+        now.date().replace(day=1), 
+        datetime.min.time(), 
+        tzinfo=now.tzinfo
+    )
+    
+    # Get latest order for this type since start of month
     last_order = Checkout.objects.filter(
         order_type=order_type,
-        created_at__gte=reset_reference
+        created_at__gte=first_day_of_month
     ).order_by('-created_at').first()
 
-    if last_order and last_order.order_code.startswith(prefix):
+    if last_order and last_order.order_code.startswith(full_prefix):
         try:
-            # Extract numeric part
-            last_number = int(last_order.order_code.replace(prefix, ''))
+            # Extract numeric part (last 3 digits)
+            last_number = int(last_order.order_code[-3:])
         except ValueError:
             last_number = 0
     else:
         last_number = 0
 
     next_number = last_number + 1
-    return f"{prefix}{str(next_number).zfill(3)}"
+    return f"{full_prefix}{str(next_number).zfill(3)}"
 
 from django.urls import reverse
 
