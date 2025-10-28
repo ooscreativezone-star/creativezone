@@ -3722,6 +3722,29 @@ def edit_product_price(request):
 
 @login_required_session(allowed_roles=['owner'])
 @require_POST
+def delete_category(request, category_id):
+    try:
+        category = ProductCategory.objects.get(id=category_id)
+        category_name = category.name
+        
+        # Check if this category has any linked products
+        if Products.objects.filter(category=category).exists():
+            return JsonResponse({
+                'success': False,
+                'error': f'Cannot delete "{category_name}" because it still has products assigned.'
+            }, status=400)
+        
+        # If no products, proceed to delete
+        category.delete()
+        return JsonResponse({'success': True, 'message': f'Category "{category_name}" deleted successfully.'})
+
+    except ProductCategory.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Category not found.'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+		
+@login_required_session(allowed_roles=['owner'])
+@require_POST
 def delete_product(request, product_id):
     product = get_object_or_404(Products, id=product_id)
     
