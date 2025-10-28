@@ -5129,41 +5129,41 @@ def update_cart(request, cart_id):
 def generate_order_code(order_type):
     if order_type == 'delivery':
         prefix = 'DG'
+        combined_types = ['delivery', 'pickup']  # share count
     elif order_type == 'pickup':
         prefix = 'PG'
+        combined_types = ['delivery', 'pickup']  # share count
     elif order_type == 'walkin':
         prefix = 'WG'
+        combined_types = ['walkin']  # separate count
     else:
         prefix = 'XX'
+        combined_types = [order_type]
 
     # Get current time in local timezone (server's timezone - Philippines)
     now = timezone.localtime()  # current local datetime
-    
+
     # Get current month abbreviation (e.g., OCT, NOV, DEC)
     month_abbr = now.strftime('%b').upper()
-    
+
     # Build prefix with month (e.g., DGOCT, PGNOV)
     full_prefix = f"{prefix}{month_abbr}"
-    
+
     # Get first day of current month for reset reference
     first_day_of_month = datetime.combine(
-        now.date().replace(day=1), 
-        datetime.min.time(), 
+        now.date().replace(day=1),
+        datetime.min.time(),
         tzinfo=now.tzinfo
     )
-    
-    # Get latest order for this type since start of month
+
+    # ✅ Get latest order shared between delivery and pickup (or walkin)
     last_order = Checkout.objects.filter(
-        order_type=order_type,
+        order_type__in=combined_types,
         created_at__gte=first_day_of_month
     ).order_by('-created_at').first()
 
-    if last_order and last_order.order_code.startswith(full_prefix):
-        try:
-            # Extract numeric part (last 3 digits)
-            last_number = int(last_order.order_code[-3:])
-        except ValueError:
-            last_number = 0
+    if last_order and last_order.order_code[-3:].isdigit():
+        last_number = int(last_order.order_code[-3:])
     else:
         last_number = 0
 
