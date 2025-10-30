@@ -266,11 +266,10 @@
         }
 
         .banner-text h1 {
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            color: white;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
             animation: slideInDown 1s ease-out;
+            color: {{customization.button_text_color|default:"#ffffff"}};
             font-family: "{{ customization.header_font_family|default:"Arial" }}";
             font-size: {% if customization.header_font_size and customization.header_font_size|add:'0' > 50 %}50{% else %}{{ customization.header_font_size|default:36 }}{% endif %}px;
             font-weight: {% if customization.header_font_style == 'bold' or customization.header_font_style == 'bolditalic' %}700{% else %}600{% endif %};
@@ -432,7 +431,7 @@
             font-weight: {% if customization.header_font_style == 'bold' or customization.header_font_style == 'bolditalic' %}900{% else %}normal{% endif %};
             font-style: {% if customization.header_font_style == 'italic' or customization.header_font_style == 'bolditalic' %}italic{% else %}normal{% endif %};
             line-height: 1.2;
-            margin-bottom: 0.5rem;
+            margin-bottom: 5px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -473,7 +472,7 @@
         }
 
         .mission:hover, .vision:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px var(--accent-color);
         }
 
@@ -618,7 +617,7 @@
         }
 
         .product-card .card:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
             box-shadow: 0 0 12px rgba(0,0,0,0.15);
         }
 
@@ -1877,7 +1876,127 @@
             }
         }
 
-           
+        /* --- Login Notice Modal --- */
+        #loginNoticeModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+        }
+
+        #loginNoticeModal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loginNoticeModal .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* 🔴 Red Header Bar */
+        .modal-header-top {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            height: 12px;
+            width: 100%;
+        }
+
+        /* ⚠️ Icon and Title */
+        .modal-icon {
+            font-size: 50px;
+            color: #b91c1c;
+            margin-top: 1.2rem;
+        }
+
+        .modal-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 10px 0 15px 0;
+            color: {{ customization.header_font_color|default:"#000000" }};
+            font-family: {{ customization.header_font_family|default:"Montserrat" }};
+            font-size: {% if customization.header_font_size and customization.header_font_size|add:'0' <= 30 %}{{ customization.header_font_size|default:20 }}{% else %}30{% endif %}px;
+
+        }
+
+        /* 📜 Message Text */
+        .modal-body p {
+            line-height: 1.6;
+            margin: 0 0.75rem 15px 0.75rem;
+            font-weight: 600;
+            font-size: {% if customization.body_font_size and customization.body_font_size|add:'0' <= 16 %}{{ customization.body_font_size|default:12 }}{% else %}16{% endif %}px;
+            color: {{ customization.body_font_color|default:"#000000" }};
+            font-family: {{ customization.body_font_family|default:"Montserrat" }};
+        }
+
+        /* 🟢🔵 Buttons (stacked vertically) */
+        .modal-footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 12px; /* space between buttons */
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            margin-top: 10px; /* space above the buttons */
+        }
+
+        .modal-btn {
+            flex: 1;
+            line-height: 1.3x
+            text-align: center;
+            padding: 10px 16px;
+            border-radius: {{ customization.button_rounded_corner|default:4 }}px;
+            font-weight: 600;
+            text-decoration: none;
+            font-family: {{ customization.header_font_family|default:"Montserrat" }};
+            transition: all 0.3s ease;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-btn i {
+            font-size: 16px;
+        }
+
+        /* 🎨 Buttons follow your customization theme */
+        .login-btn {
+        background: linear-gradient(
+            90deg,
+            {{ customization.primary_color|default:'#111111ff' }},
+            {{ customization.secondary_color|default:'#080808ff' }}
+        );
+        color: {{ customization.button_text_color|default:'#ffffff' }};
+        }
+
+        .register-btn {
+        background: {{ customization.accent_color|default:'#10b981' }};
+        color: {{ customization.button_text_color|default:'#ffffff' }};
+        }
+
+        .modal-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+  
     </style>
 
 
@@ -1896,10 +2015,11 @@
         <div class="nav-links" id="nav-links">
             <a href="{% url 'home' %}">Home</a>
             <a href="#about">About</a>
-            <a href="#bestsellerGrid">Products</a>
+            <a href="#productGrid">Products</a>
             <a href="#help">Help</a>
             <a href="#contact">Contact</a>     
             <a href="{% url 'login' %}">Log In</a>
+            <a href="{% url 'register_user' %}">Register</a>
             </div>
         </div>
     </nav>
@@ -1915,20 +2035,6 @@
                     <div class="banner-content">
                         <div class="banner-text">
                             <h1>Welcome to {% if business %}{{ business.business_name }}!{% else %}Our Store{% endif %}</h1>
-                            <p>
-                                {% if business.start_day and business.end_day and business.opening_time and business.closing_time %}
-                                    We are open every {{ business.start_day }} to {{ business.end_day }} from {{ business.opening_time|date:"h:i A" }} to {{ business.closing_time|date:"h:i A" }}.
-                                {% else %}
-                                    Discover amazing products at unbeatable prices
-                                {% endif %}
-                            </p>
-                            <p>
-                                {% if dynamic_description %}
-                                    {{ dynamic_description }}
-                                {% else %}
-                                    Shop with us today and find what you love!
-                                {% endif %}
-                            </p>
                             <button class="btn banner-cta" onclick="scrollToSearch()">
                                 <i class="fas fa-search me-2"></i>Start Shopping
                             </button>
@@ -1973,25 +2079,34 @@
             </div>
         </div>
 
+        {% if business.business_name or business.business_description or business.start_day %}
         <div>
             <!-- About Us Section -->
             <section id="about" class="about-section animate-on-scroll">
                 <div class="about-content">
                     
                     <!-- Text Section -->
-                    <div class="about-text">
+                    <div class="about-text animate-on-scroll">
                         <h2>About Us</h2>
-                        <h4 class="business-name">{{ business.business_name }}</h4>
+                        {% if business.business_name %}
+                        <h4 class="business-name animate-on-scroll">{{ business.business_name }}</h4>
+                        {% endif %}
+
+                        {% if business.start_day and business.end_day and business.opening_time and business.closing_time %}
+                        <p>
+                            We are open every {{ business.start_day }} to {{ business.end_day }} 
+                            from {{ business.opening_time|date:"h:i A" }} to {{ business.closing_time|date:"h:i A" }}.
+                        </p>
+                        {% endif %}
 
                         {% if business.business_description %}
-                            <p>{{ business.business_description }}</p>
-                        {% else %}
-                            <p>Welcome to {{ business.business_name }}! We are dedicated to providing high-quality products and services that bring value, innovation, and satisfaction to our customers. Our goal is to continuously improve and deliver exceptional experiences that meet your needs.</p>
+                        <p>{{ business.business_description }}</p>
                         {% endif %}
                     </div>
 
                     <!-- Mission & Vision Section -->
-                    <div class="mission-vision-grid">
+                    {% if business.business_mission or business.business_vision %}
+                    <div class="mission-vision-grid animate-on-scroll">
                         {% if business.business_mission %}
                         <div class="mission">
                             <h4>Our Mission</h4>
@@ -2000,29 +2115,64 @@
                         {% endif %}
 
                         {% if business.business_vision %}
-                        <div class="vision">
+                        <div class="vision animate-on-scroll">
                             <h4>Our Vision</h4>
                             <p>{{ business.business_vision }}</p>
                         </div>
                         {% endif %}
                     </div>
+                    {% endif %}
 
                 </div>
             </section>
         </div>
+        {% endif %}
+
+
+
+        <section class="help-section animate-on-scroll" id="help">
+            <div class="help-container animate-on-scroll">
+                <h2>How to Order</h2>
+                <p class="help-subtitle animate-on-scroll">Get started in just a few simple steps</p>
+                <div class="help-steps">
+                    <div class="step animate-on-scroll">
+                        <div class="step-number">1</div>
+                        <p><strong>Create Your Account</strong><br>
+                        Sign up on the website and verify your email to get started.
+                        Note: Use a valid and active email. If the verification email doesn’t appear within a few minutes, check your Spam or Junk folder.</p>
+                    </div>
+                    <div class="step animate-on-scroll">
+                        <div class="step-number">2</div>
+                        <p><strong>Browse & Place Your Order</strong><br>
+                        Explore products using the search or sort features, add your chosen items to the cart, select your delivery or pickup time, and complete your payment. If paying online, upload your receipt as proof of payment before checking out.</p>
+                    </div>
+                    <div class="step animate-on-scroll">
+                        <div class="step-number">3</div>
+                        <p><strong>Order Updates</strong><br>
+                        Stay updated with your order status through the website notifications and email updates.</p>
+                    </div>
+                    <div class="step animate-on-scroll">
+                        <div class="step-number">4</div>
+                        <p><strong>Receive & Review</strong><br>
+                        Once your order arrives or is picked up, enjoy your purchase and share your experience by leaving a review!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- Best Seller Section -->
         {% if customization.show_best_sellers %}
         <div class="bestseller-section animate-on-scroll">
-            <div class="section-header text-center mb-2">
-                <h2 class="bestseller-title">
+            <div class="section-header text-center mb-2  animate-on-scroll">
+                <h2 class="bestseller-title animate-on-scroll">
                     <i class="fas fa-trophy me-1"></i>{{ customization.best_sellers_title|default:"Best Sellers" }}
                 </h2>
-                <p class="bestseller-subtitle">{{ best_sellers_description|default:"Our most popular products loved by customers" }}</p>
+                <p class="bestseller-subtitle animate-on-scroll">{{ best_sellers_description|default:"Our most popular products loved by customers" }}</p>
             </div>
 
             <!-- Best Seller Products Grid (same style as product grid) -->
-            <div class="row" id="bestsellerGrid">
+            <div class="row animate-on-scroll" id="bestsellerGrid">
                 {% for product in best_seller_products %}
                 <!-- ✅ Only show if stocks > 0 when tracking stocks -->
                 {% if not product.track_stocks or product.stocks > 0 %}
@@ -2063,11 +2213,11 @@
                             </h6>
                             <div>
                                 <div class="price-badge mb-2">{{ product.price_range }}</div>
-                                <button class="btn btn-add-to-cart w-100"
-                                        data-product="{{ product.name }}"
-                                        data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
-                                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                                </button>
+                            <button class="btn btn-add-to-cart w-100"
+                                    type="button"
+                                    onclick="showLoginNoticeModal()">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
                             </div>
                         </div>
                     </div>
@@ -2075,8 +2225,8 @@
                 {% endif %}
                 {% empty %}
                 <div class="col-12">
-                    <div class="empty-state">
-                        <i class="fas fa-star fa-2x empty-icon"></i>
+                    <div class="empty-state animate-on-scroll">
+                        <i class="fas fa-star fa-2x empty-icon animate-on-scroll"></i>
                         <h5>No bestsellers available</h5>
                         <p>Please check back later.</p>
                     </div>
@@ -2165,11 +2315,11 @@
         </div>
 
         <!-- Products Grid -->
-        <div class="row animate" id="productGrid">
+        <div class="row" id="productGrid">
             {% for product in products %}
             <!-- ✅ Only show if stocks > 0 when tracking stocks -->
             {% if not product.track_stocks or product.stocks > 0 %}
-            <div class="col-6 col-md-4 col-xl-3 g-2 product-card fade-in" data-name="{{ product.name|lower }}" data-category="{{ product.category }}">
+            <div class="col-6 col-md-4 col-xl-3 g-2 product-card animate-on-scroll" data-name="{{ product.name|lower }}" data-category="{{ product.category }}">
                 <div class="card">
                     {% if product.image %}
                     <div class="card-img-container ratio ratio-1x1">
@@ -2200,8 +2350,8 @@
                         <div>
                             <div class="price-badge mb-2">{{ product.price_range }}</div>
                             <button class="btn btn-add-to-cart w-100"
-                                    data-product="{{ product.name }}"
-                                    data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
+                                    type="button"
+                                    onclick="showLoginNoticeModal()">
                                 <i class="fas fa-cart-plus me-2"></i>Add to Cart
                             </button>
                         </div>
@@ -2230,37 +2380,6 @@
                 <i class="fas fa-refresh me-2"></i>Clear Filters
             </button>
         </div>
-
-        <section class="help-section animate-on-scroll" id="help">
-            <div class="help-container">
-                <h2>How to Order</h2>
-                <p class="help-subtitle">Get started in just a few simple steps</p>
-                <div class="help-steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <p><strong>Create Your Account</strong><br>
-                        Sign up on the website and verify your email to get started.
-                        Note: Use a valid and active email. If the verification email doesn’t appear within a few minutes, check your Spam or Junk folder.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <p><strong>Browse & Place Your Order</strong><br>
-                        Explore products using the search or sort features, add your chosen items to the cart, select your delivery or pickup time, and complete your payment. If paying online, upload your receipt as proof of payment before checking out.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <p><strong>Order Updates</strong><br>
-                        Stay updated with your order status through the website notifications and email updates.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <p><strong>Receive & Review</strong><br>
-                        Once your order arrives or is picked up, enjoy your purchase and share your experience by leaving a review!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     
         {% if messages %}
         <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
@@ -2325,6 +2444,32 @@
         </div>
     </footer>
   
+<!-- Login Notice Modal -->
+<div id="loginNoticeModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header-top"></div>
+
+    <div class="modal-body">
+      <i class="fa fa-circle-exclamation modal-icon"></i>
+      <h2 class="modal-title">LOGIN REQUIRED</h2>
+
+      <p>
+        You need an account to add items to your cart.<br>
+        Please log in or create one to continue shopping.
+      </p>
+
+      <div class="modal-footer">
+        <a href="{% url 'login' %}" class="modal-btn login-btn">
+          <i class="fa fa-right-to-bracket me-2"></i> Go to Login
+        </a>
+        <a href="{% url 'register_user' %}" class="modal-btn register-btn">
+          <i class="fa fa-user-plus me-2"></i> Register Now
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- Embed JSON data -->
     {{ all_products|json_script:"product-variations-data" }}
@@ -2333,6 +2478,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        function showLoginNoticeModal() {
+            document.getElementById('loginNoticeModal').classList.add('show');
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('loginNoticeModal');
+            if (event.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+
+        /*
         document.addEventListener("DOMContentLoaded", () => {
             const elements = document.querySelectorAll(".animate-on-scroll");
 
@@ -2350,6 +2508,8 @@
 
             elements.forEach(el => observer.observe(el));
         });
+        */
+        /*
         document.addEventListener("DOMContentLoaded", () => {
             const steps = document.querySelectorAll(".step");
 
@@ -2363,39 +2523,7 @@
 
             steps.forEach(step => observer.observe(step));
         });
-        document.addEventListener("DOMContentLoaded", () => {
-            const searchSection = document.querySelector(".search-section");
-            const helpSection = document.querySelector("#help");
-
-            if (!searchSection || !helpSection) return;
-
-            let isHidden = false;
-            let lastScrollY = window.scrollY;
-            let timeout;
-
-            window.addEventListener("scroll", () => {
-                const helpTop = helpSection.getBoundingClientRect().top;
-                const triggerOffset = 150; // adjust how early it hides
-
-                // Clear previous timer for smoother animation timing
-                clearTimeout(timeout);
-
-                if (helpTop <= triggerOffset && !isHidden) {
-                    // Fade out when reaching the help section
-                    searchSection.classList.add("hidden");
-                    isHidden = true;
-                } 
-                else if (helpTop > triggerOffset && isHidden) {
-                    // Add small delay for smooth fade-in when scrolling up
-                    timeout = setTimeout(() => {
-                        searchSection.classList.remove("hidden");
-                        isHidden = false;
-                    }, 200); // adjust delay for fade-in (200–400ms works best)
-                }
-
-                lastScrollY = window.scrollY;
-            });
-        });
+        */
 
         const toggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
@@ -2442,8 +2570,8 @@
         // Apply title casing to product names in both main grid and best seller section
         document.querySelectorAll('.product-card .card-title').forEach(el => {
             el.textContent = toTitleCase(el.textContent);
+            });
         });
-    });
 
         // Global variables
         let slideInterval;
@@ -2470,257 +2598,6 @@
                 console.error('Error parsing product data:', error);
                 productData = {};
             }
-        }
-
-        function initializeProductModals() {
-            // Add event listener to each "Add to Cart" button (product grid + best-sellers)
-            document.querySelectorAll('.btn-add-to-cart, .btn-bestseller').forEach(button => {
-                button.addEventListener('click', () => {
-                    const productName = button.getAttribute('data-product');
-                    const imageUrl = button.getAttribute('data-image') || 
-                                    button.closest('.product-card')?.querySelector('img')?.src || '';
-                    openProductModal(productName, imageUrl);
-                });
-            });
-
-            // Handle variation change
-            const variationSelect = document.getElementById('modalVariation');
-            if (variationSelect) {
-                variationSelect.addEventListener('change', handleVariationChange);
-            }
-
-            // Handle quantity input changes
-            const quantityInput = document.getElementById('modalQuantity');
-            if (quantityInput) {
-                quantityInput.addEventListener('input', updateModalTotal);
-            }
-        }
-
-
-        function openProductModal(productName, imageUrl) {
-            const modalNameEl = document.getElementById('modalProductName');
-            const modalDescEl = document.getElementById('modalProductDescription'); // ✅ description element
-            const modalImageEl = document.getElementById('modalProductImage');
-            const placeholderEl = document.getElementById('modalPlaceholder');
-            const placeholderLetterEl = document.getElementById('modalPlaceholderLetter');
-            const variationSelect = document.getElementById('modalVariation');
-            const confirmAddBtn = document.getElementById('confirmAddBtn');
-        
-            if (modalNameEl) modalNameEl.textContent = productName;
-        
-            // ✅ Fill description if available
-            if (modalDescEl) {
-                const variations = getProductVariations(productName);
-                if (variations.length > 0 && variations[0].description) {
-                    modalDescEl.textContent = variations[0].description;
-                    modalDescEl.style.display = "block";
-                } else {
-                    modalDescEl.textContent = "";
-                    modalDescEl.style.display = "none";
-                }
-            }
-        
-            // Handle image display with improved logic
-            if (modalImageEl && placeholderEl && placeholderLetterEl) {
-                modalImageEl.style.display = 'none';
-                modalImageEl.src = '';
-                placeholderEl.style.display = 'none';
-                placeholderLetterEl.textContent = '';
-                
-                modalImageEl.offsetHeight;
-                placeholderEl.offsetHeight;
-                
-                if (imageUrl && imageUrl.trim() !== "") {
-                    modalImageEl.onload = function() {
-                        placeholderEl.style.display = 'none';
-                        modalImageEl.style.display = 'block';
-                    };
-                    modalImageEl.onerror = function() {
-                        modalImageEl.style.display = 'none';
-                        placeholderLetterEl.textContent = productName ? productName.charAt(0).toUpperCase() : "?";
-                        placeholderEl.style.display = 'flex';
-                    };
-                    modalImageEl.src = imageUrl;
-                } else {
-                    setTimeout(() => {
-                        placeholderLetterEl.textContent = productName ? productName.charAt(0).toUpperCase() : "?";
-                        placeholderEl.style.display = 'flex';
-                    }, 10);
-                }
-            }
-        
-            // Reset and populate variation dropdown WITH STOCK INFORMATION
-            if (variationSelect) {
-                variationSelect.innerHTML = `
-                    <option value="" disabled selected hidden>Choose a variation...</option>
-                `;
-                const variations = getProductVariations(productName);
-                if (variations.length > 0) {
-                    variations.forEach(variation => {
-                        const opt = document.createElement('option');
-                        opt.value = variation.variation_name;
-                        opt.setAttribute('data-price', variation.price);
-                        opt.setAttribute('data-stocks', variation.stocks);
-                        opt.setAttribute('data-track-stocks', variation.track_stocks);
-                        
-                        let optionText = `${variation.variation_name} (₱${parseFloat(variation.price).toFixed(2)})`;
-                        if (variation.track_stocks) {
-                            if (variation.stocks > 0) {
-                                optionText += ` - Qty:${variation.stocks}`;
-                            } else {
-                                optionText += ` - Out of stock`;
-                                opt.disabled = true;
-                                opt.style.color = '#dc3545';
-                            }
-                        }
-                        
-                        opt.textContent = optionText;
-                        variationSelect.appendChild(opt);
-                    });
-                    variationSelect.disabled = false;
-                } else {
-                    variationSelect.innerHTML = '<option value="" disabled selected>No variations available</option>';
-                    variationSelect.disabled = true;
-                }
-            }
-        
-            // Reset quantity & pricing
-            const quantityInput = document.getElementById('modalQuantity');
-            const priceEl = document.getElementById('modalPrice');
-            const totalEl = document.getElementById('modalTotal');
-        
-            if (quantityInput) quantityInput.value = 1;
-            if (priceEl) priceEl.textContent = '0.00';
-            if (totalEl) totalEl.textContent = '0.00';
-        
-            if (confirmAddBtn) confirmAddBtn.disabled = true;
-        
-            // Show modal
-            const modalElement = document.getElementById('addToCartModal');
-            if (modalElement && typeof bootstrap !== 'undefined') {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-            }
-        }
-
-
-        function getProductVariations(productName) {
-            // Handle both possible data structures
-            if (Array.isArray(productData)) {
-                return productData.filter(p => p.name === productName);
-            } else if (productData[productName]) {
-                return productData[productName];
-            }
-            return [];
-        }
-
-        function handleVariationChange() {
-            const variationSelect = document.getElementById('modalVariation');
-            const selected = variationSelect?.selectedOptions[0];
-            const price = parseFloat(selected?.getAttribute('data-price')) || 0;
-            const stocks = parseInt(selected?.getAttribute('data-stocks')) || 0;
-            const trackStocks = selected?.getAttribute('data-track-stocks') === 'True';
-            
-            const priceEl = document.getElementById('modalPrice');
-            const quantityInput = document.getElementById('modalQuantity');
-            const confirmAddBtn = document.getElementById('confirmAddBtn');
-            
-            if (priceEl) {
-                priceEl.textContent = price.toFixed(2);
-            }
-
-            // Set quantity limits based on stock
-            if (quantityInput && trackStocks) {
-                quantityInput.max = stocks;
-                if (parseInt(quantityInput.value) > stocks) {
-                    quantityInput.value = Math.min(stocks, 1);
-                }
-            }
-
-            // Enable Add to Cart button if a variation is selected and has stock
-            if (confirmAddBtn) {
-                const hasStock = !trackStocks || stocks > 0;
-                confirmAddBtn.disabled = !selected || !hasStock;
-            }
-
-            updateModalTotal();
-        }
-
-        function updateModalTotal() {
-            const quantityInput = document.getElementById('modalQuantity');
-            const priceEl = document.getElementById('modalPrice');
-            const totalEl = document.getElementById('modalTotal');
-
-            if (!quantityInput || !priceEl || !totalEl) return;
-
-            const qty = parseInt(quantityInput.value) || 1;
-            const unitPrice = parseFloat(priceEl.textContent.replace(',', '')) || 0;
-            const total = qty * unitPrice;
-            
-            totalEl.textContent = total.toFixed(2);
-        }
-
-        function adjustQuantity(change) {
-            const input = document.getElementById('modalQuantity');
-            const variationSelect = document.getElementById('modalVariation');
-            const selected = variationSelect?.selectedOptions[0];
-            
-            if (!input) return;
-
-            const stocks = parseInt(selected?.getAttribute('data-stocks')) || 99;
-            const trackStocks = selected?.getAttribute('data-track-stocks') === 'True';
-            const maxQuantity = trackStocks ? stocks : 99;
-
-            let current = parseInt(input.value) || 1;
-            const newVal = Math.min(Math.max(current + change, 1), maxQuantity);
-            input.value = newVal;
-            updateModalTotal();
-        }
-
-        function addToCartConfirmed() {
-            const modalElement = document.getElementById('addToCartModal');
-            const spinner = document.getElementById('loadingSpinner');
-            const success = document.getElementById('cartSuccess');
-
-            const productName = document.getElementById('modalProductName')?.textContent;
-            const variation = document.getElementById('modalVariation')?.value;
-            const quantity = parseInt(document.getElementById('modalQuantity')?.value) || 1;
-            const price = parseFloat(document.getElementById('modalPrice')?.textContent) || 0;
-
-            const cartData = {
-                product_name: `${productName} - ${variation}`,
-                quantity: quantity,
-                price: price * quantity  // Saving price multiplied by quantity
-            };
-
-            if (modalElement && typeof bootstrap !== 'undefined') {
-                const modal = bootstrap.Modal.getInstance(modalElement);
-                if (modal) modal.hide();
-            }
-
-            spinner.style.display = 'block';
-            success.style.display = 'none';
-
-            fetch('/add-to-cart/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify(cartData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                spinner.style.display = 'none';
-                if (data.success) {
-                    success.style.display = 'block';
-                    setTimeout(() => success.style.display = 'none', 2500);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                spinner.style.display = 'none';
-            });
         }
 
 
@@ -2924,142 +2801,6 @@
             }
         }
     </script>
-    {% with opening=opening_time closing=closing_time start_day=business.start_day end_day=business.end_day force_closed=business.force_closed %}
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const openingTime = "{{ opening }}";   // e.g. "23:00:00"
-        const closingTime = "{{ closing }}";   // e.g. "06:00:00"
-        const startDay = "{{ start_day }}";    // e.g. "Monday"
-        const endDay = "{{ end_day }}";        // e.g. "Friday"
-        let forceClosed = {{ force_closed|yesno:"true,false" }}; // from backend
-
-        const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-        function parseTimeToToday(t) {
-            const [h, m, s] = t.split(":").map(Number);
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, 0);
-        }
-
-        function isWithinOperatingDays() {
-            const now = new Date();
-            const todayIndex = now.getDay(); 
-            const startIndex = weekdays.indexOf(startDay);
-            const endIndex = weekdays.indexOf(endDay);
-
-            if (startIndex <= endIndex) {
-                return todayIndex >= startIndex && todayIndex <= endIndex;
-            } else {
-                return todayIndex >= startIndex || todayIndex <= endIndex;
-            }
-        }
-
-        function isWithinOperatingHours() {
-            const now = new Date();
-            let open = parseTimeToToday(openingTime);
-            let close = parseTimeToToday(closingTime);
-        
-            // Handle special case: closing exactly at midnight (00:00:00)
-            if (closingTime === "00:00:00") {
-                close = new Date(open);
-                close.setHours(23, 59, 59, 999);
-                return now >= open && now <= close;
-            }
-            
-            // Check if this is an overnight operation (closing time is "earlier" than opening)
-            const isOvernight = close <= open;
-            
-            if (isOvernight) {
-                // For overnight hours, we're open if:
-                // - Current time is after opening time (still same day), OR
-                // - Current time is before closing time (early morning of next day)
-                return now >= open || now <= close;
-            } else {
-                // Normal same-day operation
-                return now >= open && now <= close;
-            }
-        }
-
-        function applyClosedState() {
-            const addToCartButtons = document.querySelectorAll('.btn-add-to-cart, .btn-bestseller');
-            const outsideHoursNotice = document.getElementById('outsideHoursNotice');
-            const forceClosedNotice = document.getElementById('forceClosedNotice');
-
-            addToCartButtons.forEach(btn => {
-                btn.disabled = true;
-                btn.title = "Shop is currently closed";
-                btn.classList.add("disabled");
-            });
-
-            if (forceClosed) {
-                // Show force-closed message
-                if (forceClosedNotice) forceClosedNotice.style.display = 'block';
-                if (outsideHoursNotice) outsideHoursNotice.style.display = 'none';
-            } else {
-                // Show outside hours message
-                if (outsideHoursNotice) outsideHoursNotice.style.display = 'block';
-                if (forceClosedNotice) forceClosedNotice.style.display = 'none';
-            }
-        }
-
-        function applyOpenState() {
-            const addToCartButtons = document.querySelectorAll('.btn-add-to-cart, .btn-bestseller');
-            const outsideHoursNotice = document.getElementById('outsideHoursNotice');
-            const forceClosedNotice = document.getElementById('forceClosedNotice');
-
-            addToCartButtons.forEach(btn => {
-                btn.disabled = false;
-                btn.title = "";
-                btn.classList.remove("disabled");
-            });
-
-            // Hide all notices when shop is open
-            if (outsideHoursNotice) outsideHoursNotice.style.display = 'none';
-            if (forceClosedNotice) forceClosedNotice.style.display = 'none';
-        }
-
-        function checkShopStatus() {
-            if (forceClosed) {
-                applyClosedState(); 
-                return;
-            }
-
-            // Only check schedule when not forced closed
-            const shopClosed = !(isWithinOperatingDays() && isWithinOperatingHours());
-            if (shopClosed) {
-                applyClosedState();
-            } else {
-                applyOpenState();
-            }
-        }
-
-        // ✅ Initial check
-        checkShopStatus();
-
-        // --- Poll backend every 3s to refresh forceClosed flag ---
-        setInterval(() => {
-            fetch("{% url 'toggle_shop_status' %}", { method: "GET" })
-            .then(res => res.json())
-            .then(data => { 
-                const newForceClosed = data.force_closed;
-                if (forceClosed !== newForceClosed) {
-                    forceClosed = newForceClosed;
-                }
-                checkShopStatus(); // 👈 re-check only when flag updates
-            })
-            .catch(() => {});
-        }, 3000);
-
-        // --- Recheck status every 60 seconds ---
-        setInterval(() => {
-            if (!forceClosed) {
-                checkShopStatus();
-            }
-        }, 1000); 
-
-    });
-    </script>
-    {% endwith %}
 
     <!-- Real-time Product Visibility -->
     <script>
